@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">GpsDeviceClient</string>
+    <string name="action_settings">Settings</string>
+    <string name="textDescription">App</string>
+    <string name="buttonOn">On</string>
+    <string name="buttonOff">Off</string>
+</resources>
