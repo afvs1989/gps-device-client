@@ -50,9 +50,7 @@ public class SendLocationService extends Service {
                 e.printStackTrace();
             }
         }
-        return super.
-
-                onStartCommand(intent, flags, startId);
+        return START_STICKY;
     }
 
     private static boolean isConnectingToInternet(Context _context) {
@@ -74,7 +72,7 @@ public class SendLocationService extends Service {
     public void onDestroy() {
         super.onDestroy();
         Toast.makeText(this, "Servicio destruído!", Toast.LENGTH_SHORT).show();
-        myTask.cancel(true);
+        //myTask.cancel(true);
     }
 
     @Override
@@ -129,7 +127,7 @@ public class SendLocationService extends Service {
                     date = dateFormat.format(new Date());
                     publishProgress(date);
                     // Stop 5s
-                    Thread.sleep(30000);
+                    Thread.sleep(10000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
