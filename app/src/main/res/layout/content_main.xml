@@ -1,46 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".MainActivity"
-    tools:showIn="@layout/activity_main">
+    android:background="#D6D3D3"
+    android:orientation="vertical"
+    android:padding="16dp">
 
     <TextView
-        android:id="@+id/textView"
-        android:layout_width="94dp"
+        android:id="@+id/textTitle"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:text="@string/textDescription"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="130dp"
-        tools:layout_editor_absoluteY="50dp" />
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="16dp"
+        android:text="Cliente Gps"
+        android:textColor="#00574B"
+        android:textSize="40sp"
+        android:typeface="serif" />
+
+    <EditText
+        android:id="@+id/textUserKey"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/colorPrimaryDark"
+        android:defaultFocusHighlightEnabled="true"
+        android:hint="Clave de Usuario"
+        android:inputType="text" />
+
+    <EditText
+        android:id="@+id/textDeviceKey"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:backgroundTint="@color/colorPrimaryDark"
+        android:hint="Clave de Dispositivo"
+        android:inputType="text" />
+
+    <EditText
+        android:id="@+id/textFrequencyTime"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/colorPrimaryDark"
+        android:hint="Frecuencia envio (Seg)"
+        android:inputType="number" />
 
     <Button
         android:id="@+id/buttonOn"
-        android:layout_width="100dp"
-        android:layout_height="50dp"
-        android:layout_below="@+id/textView"
-        android:layout_alignStart="@+id/buttonOff"
-        android:layout_alignLeft="@+id/buttonOff"
-        android:text="@string/buttonOn"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="54dp"
-        tools:layout_editor_absoluteY="147dp" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimaryDark"
+        android:elevation="4dp"
+        android:paddingLeft="70dp"
+        android:paddingRight="70dp"
+        android:text="Encender"
+        android:textColor="#F8F5F5" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="10dp"
+        android:layout_weight="0" />
 
     <Button
         android:id="@+id/buttonOff"
-        android:layout_width="100dp"
-        android:layout_height="50dp"
-        android:layout_below="@+id/buttonOn"
-        android:layout_centerHorizontal="true"
-        android:text="@string/buttonOff"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="230dp"
-        tools:layout_editor_absoluteY="147dp" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimaryDark"
+        android:elevation="4dp"
+        android:paddingLeft="70dp"
+        android:paddingRight="70dp"
+        android:text="Apagar"
+        android:textColor="#F8F5F5" />
 
-</RelativeLayout>
+</LinearLayout>

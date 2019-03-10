@@ -28,6 +28,17 @@ import java.util.Date;
 public class SendLocationService extends Service {
     public static MyTask myTask;
     public static String[] arguments;
+    public static String userKey;
+    public static String deviceKey;
+    public static int frequencyTimeKey;
+    private static String _url;
+
+    static {
+        SendLocationService.userKey = "default";
+        SendLocationService.deviceKey = "default";
+        SendLocationService.frequencyTimeKey = 30000;
+        SendLocationService._url = "http://134.209.58.218:3000/api/gps-device-management/coordinates";
+    }
 
     @Override
     public void onCreate() {
@@ -41,9 +52,10 @@ public class SendLocationService extends Service {
         if (isConnectingToInternet(getApplicationContext())) {
             try {
                 SendLocationService.myTask.execute(new String[]{
-                        "http://134.209.58.218:3000/api/gps-device-management/coordinates",
-                        "afvs-nativo",
-                        "afvs-moto"
+                        SendLocationService._url,
+                        SendLocationService.userKey,
+                        SendLocationService.deviceKey,
+                        String.valueOf(SendLocationService.frequencyTimeKey)
                 });
             } catch (Exception e) {
                 // TODO Auto-generated catch block
@@ -133,7 +145,8 @@ public class SendLocationService extends Service {
                     this.sendCoordinates(longitude, latitude);
                     publishProgress(this._date);
                     // Stop 10s
-                    Thread.sleep(10000);
+                    int stopSeconds = Integer.parseInt(SendLocationService.arguments[3]) * 1000;
+                    Thread.sleep(stopSeconds);
                 } catch (InterruptedException e) {
                     this._tracker.stopUsingGPS();
                     this.onCancelled();
