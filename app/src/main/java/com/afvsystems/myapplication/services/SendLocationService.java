@@ -26,13 +26,13 @@ import java.util.Arrays;
 import java.util.Date;
 
 public class SendLocationService extends Service {
-    MyTask myTask;
+    public static MyTask myTask;
     public static String[] arguments;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        Toast.makeText(this, "Servicio creado!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Envio de coordenadas iniciado!", Toast.LENGTH_SHORT).show();
         myTask = new MyTask();
     }
 
@@ -40,7 +40,7 @@ public class SendLocationService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (isConnectingToInternet(getApplicationContext())) {
             try {
-                myTask.execute(new String[]{
+                SendLocationService.myTask.execute(new String[]{
                         "http://134.209.58.218:3000/api/gps-device-management/coordinates",
                         "afvs-nativo",
                         "afvs-moto"
@@ -72,7 +72,10 @@ public class SendLocationService extends Service {
     public void onDestroy() {
         super.onDestroy();
         Toast.makeText(this, "Servicio destruído!", Toast.LENGTH_SHORT).show();
-        //myTask.cancel(true);
+    }
+
+    public static void cancelTask() {
+        SendLocationService.myTask.cancel(true);
     }
 
     @Override
@@ -82,15 +85,16 @@ public class SendLocationService extends Service {
 
     private class MyTask extends AsyncTask<String, String, String> {
 
-        private DateFormat dateFormat;
-        private String date;
-        private boolean cent;
+        private DateFormat _dateFormat;
+        private String _date;
+        private boolean _cent;
+        private GPSTracker _tracker;
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            dateFormat = new SimpleDateFormat("HH:mm:ss");
-            cent = true;
+            this._dateFormat = new SimpleDateFormat("HH:mm:ss");
+            this._cent = true;
         }
 
         private void sendCoordinates(double longitude, double latitude) {
@@ -117,18 +121,22 @@ public class SendLocationService extends Service {
         @Override
         protected String doInBackground(String... arg0) {
             SendLocationService.arguments = arg0;
-            while (cent) {
+            //create an instance singleton
+            this._tracker = GPSTracker.getInstance();
+            while (this._cent) {
                 try {
-                    //create an instance singleton
-                    GPSTracker tracker = GPSTracker.getInstance();
-                    tracker.canGetLocation();
-                    Location location = tracker.getLocation(getApplicationContext());
-                    this.sendCoordinates(location.getLongitude(), location.getLatitude());
-                    date = dateFormat.format(new Date());
-                    publishProgress(date);
-                    // Stop 5s
+                    this._tracker.canGetLocation();
+                    Location location = this._tracker.getLocation(getApplicationContext());
+                    this._date = this._dateFormat.format(new Date());
+                    double longitude = location.getLongitude();
+                    double latitude = location.getLatitude();
+                    this.sendCoordinates(longitude, latitude);
+                    publishProgress(this._date);
+                    // Stop 10s
                     Thread.sleep(10000);
                 } catch (InterruptedException e) {
+                    this._tracker.stopUsingGPS();
+                    this.onCancelled();
                     e.printStackTrace();
                 }
             }
@@ -143,7 +151,7 @@ public class SendLocationService extends Service {
         @Override
         protected void onCancelled() {
             super.onCancelled();
-            cent = false;
+            this._cent = false;
         }
     }
 }

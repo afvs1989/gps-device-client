@@ -26,12 +26,15 @@ public class MainActivity extends AppCompatActivity {
             switch (v.getId()) {
                 case R.id.buttonOn:
                     // Start Service
-                    ActivityCompat.requestPermissions(MainActivity.this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, 123);
+                    ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 123);
                     startService(new Intent(MainActivity.this, SendLocationService.class));
                     break;
                 case R.id.buttonOff:
                     // Stop Service
-                    stopService(new Intent(MainActivity.this, SendLocationService.class));
+                    //stopService(new Intent(MainActivity.this, SendLocationService.class));
+                    SendLocationService.cancelTask();
+                    Toast.makeText(getApplicationContext(), "Envio de Coordenadas Detenido!",
+                            Toast.LENGTH_LONG).show();
                     break;
             }
         }
