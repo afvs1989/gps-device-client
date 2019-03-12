@@ -1,6 +1,8 @@
 package com.afvsystems.myapplication;
 
 import android.Manifest;
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -53,6 +55,16 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     View.OnClickListener mClickListener = new View.OnClickListener() {
 
         @Override
@@ -71,7 +83,11 @@ public class MainActivity extends AppCompatActivity {
                     SendLocationService.userKey = MainActivity._userKey;
                     SendLocationService.deviceKey = MainActivity._deviceKey;
                     SendLocationService.frequencyTimeKey = Integer.parseInt(MainActivity._frequencyTime);
-                    startService(new Intent(MainActivity.this, SendLocationService.class));
+                    //startService(new Intent(MainActivity.this, SendLocationService.class));
+                    if (isMyServiceRunning(SendLocationService.class)) return;
+                    Intent startIntent = new Intent(MainActivity.this, SendLocationService.class);
+                    startIntent.setAction("start");
+                    startService(startIntent);
                     break;
                 case R.id.buttonOff:
                     // Stop Service

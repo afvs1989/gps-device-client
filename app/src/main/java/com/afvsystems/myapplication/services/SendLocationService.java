@@ -1,5 +1,9 @@
 package com.afvsystems.myapplication.services;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -7,8 +11,13 @@ import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.os.IBinder;
+import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
+
+import com.afvsystems.myapplication.MainActivity;
+import com.afvsystems.myapplication.R;
 
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
@@ -32,6 +41,10 @@ public class SendLocationService extends Service {
     public static String deviceKey;
     public static int frequencyTimeKey;
     private static String _url;
+    private Handler h;
+    private Runnable r;
+
+    int counter = 0;
 
     static {
         SendLocationService.userKey = "default";
@@ -46,9 +59,62 @@ public class SendLocationService extends Service {
         Toast.makeText(this, "Envio de coordenadas iniciado!", Toast.LENGTH_SHORT).show();
         myTask = new MyTask();
     }
+    private Notification updateNotification() {
+        counter++;
+        String info = counter + ".0";
 
+        Context context = getApplicationContext();
+
+        PendingIntent action = PendingIntent.getActivity(context,
+                0, new Intent(context, MainActivity.class),
+                PendingIntent.FLAG_CANCEL_CURRENT); // Flag indicating that if the described PendingIntent already exists, the current one should be canceled before generating a new one.
+
+        NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationCompat.Builder builder;
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+
+            String CHANNEL_ID = "gps_channel";
+
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, "GpsChannel",
+                    NotificationManager.IMPORTANCE_LOW);
+            channel.setDescription("AFVS Cliente Gps");
+            manager.createNotificationChannel(channel);
+
+            builder = new NotificationCompat.Builder(this, CHANNEL_ID);
+        }
+        else
+        {
+            builder = new NotificationCompat.Builder(context);
+        }
+
+            return builder.setContentIntent(action)
+                .setContentTitle(info)
+                .setTicker(info)
+                .setContentText(info)
+                .setSmallIcon(R.drawable.ic_launcher_background)
+                .setContentIntent(action)
+                .setOngoing(true).build();
+    }
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        if (intent.getAction().contains("start")) {
+          /*  h = new Handler();
+            r = new Runnable() {
+                @Override
+                public void run() {
+                    startForeground(101, updateNotification());
+                    h.postDelayed(this, 1000);
+                }
+            };*/
+
+           // h.post(r);
+            startForeground(101, updateNotification());
+        } else {
+            //h.removeCallbacks(r);
+            stopForeground(true);
+            stopSelf();
+        }
         if (isConnectingToInternet(getApplicationContext())) {
             try {
                 SendLocationService.myTask.execute(new String[]{
