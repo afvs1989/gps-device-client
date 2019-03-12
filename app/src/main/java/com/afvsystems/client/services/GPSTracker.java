@@ -1,4 +1,4 @@
-package com.afvsystems.myapplication.services;
+package com.afvsystems.client.services;
 
 import android.Manifest;
 import android.app.AlertDialog;

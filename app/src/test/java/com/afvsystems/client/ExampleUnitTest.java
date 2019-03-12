@@ -1,4 +1,4 @@
-package com.afvsystems.myapplication;
+package com.afvsystems.client;
 
 import org.junit.Test;
 

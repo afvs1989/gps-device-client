@@ -1,4 +1,4 @@
-package com.afvsystems.myapplication;
+package com.afvsystems.client;
 
 import android.Manifest;
 import android.app.ActivityManager;
@@ -12,7 +12,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.afvsystems.myapplication.services.SendLocationService;
+import com.afvsystems.client.services.SendLocationService;
 
 public class MainActivity extends AppCompatActivity {
     private static SharedPreferences _sharedPreferences;
@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initData() {
+        ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 123);
         setContentView(R.layout.activity_main);
         findViewById(R.id.buttonOn).setOnClickListener(mClickListener);
         findViewById(R.id.buttonOff).setOnClickListener(mClickListener);
@@ -79,7 +80,6 @@ public class MainActivity extends AppCompatActivity {
                     MainActivity._editor.putString("frequencyTimeKey", MainActivity._frequencyTime);
                     MainActivity._editor.commit();
                     // Start Service
-                    ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 123);
                     SendLocationService.userKey = MainActivity._userKey;
                     SendLocationService.deviceKey = MainActivity._deviceKey;
                     SendLocationService.frequencyTimeKey = Integer.parseInt(MainActivity._frequencyTime);
