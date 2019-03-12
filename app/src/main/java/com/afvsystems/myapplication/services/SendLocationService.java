@@ -77,7 +77,7 @@ public class SendLocationService extends Service {
             String CHANNEL_ID = "gps_channel";
 
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, "GpsChannel",
-                    NotificationManager.IMPORTANCE_LOW);
+                    NotificationManager.IMPORTANCE_HIGH);
             channel.setDescription("AFVS Cliente Gps");
             manager.createNotificationChannel(channel);
 
